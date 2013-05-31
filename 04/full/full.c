@@ -21,7 +21,7 @@ int main()
     fgets(last, sizeof(last), stdin);
     sscanf(last, "%s\n", last);
     if (n < 0) {
-        printf("# Error\n");
+        printf("# Error %d\n", n);
         return 1;
     }
 
