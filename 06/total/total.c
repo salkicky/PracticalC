@@ -11,8 +11,8 @@ int main()
 {
     char line[80];
     int total = 0;
-    int  input_num = 0;
-    int ret = 0;
+    int input_num = 0;
+    int scan_length = 0;
 
     while(1) {
         /* “ü—Í”’l‚Ì‰Šú‰» */
@@ -21,10 +21,10 @@ int main()
         /* ”’l“ü—Í */
         printf("please input number : ");
         fgets(line, sizeof(line), stdin);
-        ret = sscanf(line, "%d", &input_num);
+        scan_length = sscanf(line, "%d", &input_num);
 
         /* ”»’è */
-        if (ret == 0) {
+        if (scan_length == 0) {
             /* “ü—Í‚³‚ê‚½•¶š‚ª”š‚Å‚È‚¯‚ê‚Î */
             printf("[ERROR] you input wrong number! please retry.\n");
         } else if(input_num == 0) {
