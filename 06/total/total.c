@@ -27,15 +27,19 @@ int main()
         if (scan_length == 0) {
             /* “ü—Í‚³‚ê‚½•¶š‚ª”š‚Å‚È‚¯‚ê‚Î */
             printf("[ERROR] you input wrong number! please retry.\n");
-        } else if(input_num == 0) {
-            /* 0 ‚ğ“ü—Í‚Å”²‚¯‚é */
-            printf("bye\n");
-            break;
+            continue;
         } else {
+            /* “ü—Í’l‚Ì•]‰¿ */
+            if(input_num == 0) {
+                /* 0 ‚ğ“ü—Í‚Å”²‚¯‚é */
+                printf("bye\n");
+                break;
+            }
+            
             /* ‚±‚±‚Ü‚Å³í‚È‚ç‰ÁZ */
             total += input_num;
+            printf("  total = %d\n", total);
         }
-        printf("  total = %d\n", total);
     }
 
     return (0);
