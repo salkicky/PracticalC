@@ -15,10 +15,10 @@ int main()
 
     /* o—Í */
     for (n = 1; n <= stairs; n++) {
-        for (space_cnt = 0; space_cnt < (stairs - n); space_cnt++) {
+        for (space_cnt = 1; space_cnt <= (stairs - n); space_cnt++) {
             printf(" ");
         }
-        for (astah_cnt = 0; astah_cnt < (2*n -1); astah_cnt++) {
+        for (astah_cnt = 1; astah_cnt <= (2*n -1); astah_cnt++) {
             printf("*");
         }
         printf("\n");
