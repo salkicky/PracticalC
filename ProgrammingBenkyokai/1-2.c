@@ -1,5 +1,6 @@
 #include <stdio.h>
 
+/* プロトタイプ宣言 */
 void print_space(int total_stairs, int stairs);
 void print_astah(int total_stairs, int stairs);
 
