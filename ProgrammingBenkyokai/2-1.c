@@ -5,21 +5,26 @@
  **/
 int main()
 {
+    char line[80];
     int check_num;
     int prime_counter;
 
     int i;
 
-    check_num = 2;
+    /* チェック数列を入力 */
+    printf("Please input check number > ");
+    fgets(line, sizeof(line), stdin);
+    sscanf(line, "%d", &check_num);
+
     prime_counter = 0;
 
-    for (i = check_num; 1 < i; i--) {
+    for (i = (check_num-1); 1 < i; i--) {
         if ((check_num % i) == 0) {
             break;
         }
     }
 
-    if (check_num = 1) {
+    if (i = 1) {
         prime_counter++;
     }
 
