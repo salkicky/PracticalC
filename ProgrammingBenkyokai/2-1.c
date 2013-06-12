@@ -18,13 +18,13 @@ int main()
 
     prime_counter = 0;
 
-    for (i = (check_num-1); 1 < i; i--) {
+    for (i = 2; i < check_num; i++) {
         if ((check_num % i) == 0) {
             break;
         }
     }
 
-    if (i = 1) {
+    if (i == check_num) {
         prime_counter++;
     }
 
