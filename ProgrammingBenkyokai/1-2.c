@@ -9,25 +9,28 @@ void print_astah(int total_stairs, int stairs);
  */
 int main()
 {
-    char line[80];
-    int total_stairs;     /* 段数 */
-    int n;
-    int space_cnt;
-    int astah_cnt;
+    char line[80];          /* 入力取り込み用バッファ */
+    int total_stairs;       /* 段数 */
+    int n;                  /* ループカウンタ */
 
-    /* 段数の入力 */
+    /* 段数の入力値を取り込み */
     printf("Please Input Stairs > ");
     fgets(line, sizeof(line), stdin);
-    sscanf(line, "%d", &total_stairs);
+    if (sscanf(line, "%d", &total_stairs) == 0) {
+        printf("Error : Input Value is not Number.\n");
+        exit(8);
+    }
 
     /* 出力 */
-    for (n = 1; n <= total_stairs; n++) {
+    /* 初めの△を出力する */
+    for (n = 0; n < total_stairs; n++) {
         print_space(total_stairs, n);
         print_astah(total_stairs, n);
         printf("\n");
     }
 
-    for (n = (total_stairs - 1); 0 < n; n--) {
+    /* 後の▽を出力する */
+    for (n = (total_stairs - 2); 0 <= n; n--) {
         print_space(total_stairs, n);
         print_astah(total_stairs, n);
         printf("\n");
@@ -45,7 +48,7 @@ void print_space(int total_stairs, int stairs)
 {
     int space_cnt;
 
-    for (space_cnt = 1; space_cnt <= (total_stairs - stairs); space_cnt++) {
+    for (space_cnt = 0; space_cnt < (total_stairs - stairs - 1); space_cnt++) {
         printf(" ");
     }
 }
@@ -59,7 +62,7 @@ void print_astah(int total_stairs, int stairs)
 {
     int astah_cnt;
 
-    for (astah_cnt = 1; astah_cnt <= (2*stairs -1); astah_cnt++) {
+    for (astah_cnt = 0; astah_cnt < (2*stairs + 1); astah_cnt++) {
         printf("*");
     }
 }

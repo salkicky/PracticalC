@@ -12,20 +12,25 @@ int main()
     /* ’i”‚Ì“ü—Í */
     printf("Please Input Max Stairs > ");
     fgets(line, sizeof(line), stdin);
-    sscanf(line, "%d", &max_stairs);
+    if (sscanf(line, "%d", &max_stairs) == 0) {
+        printf("Error : Input Value is not Number.\n");
+        exit(8);
+    }
 
     /* o—Í */
-    for (stairs = 1; stairs <= max_stairs; stairs++) {
-        char stairs_chr[80];
+    for (stairs = 0; stairs < max_stairs; stairs++) {
+        char stairs_chr[200];
         char *index;
 
         index = stairs_chr;
 
-        space_cnt = max_stairs - stairs;
+        // set ' '
+        space_cnt = max_stairs - stairs - 1;
         memset(index, ' ', space_cnt);
         index += space_cnt;
 
-        astah_cnt = 2 * stairs - 1;
+        // set '*'
+        astah_cnt = 2 * stairs + 1;
         memset(index, '*', astah_cnt);
         index += astah_cnt;
 
