@@ -33,19 +33,19 @@ int main(int argc, char *argv[])
     while (1) {
         // read character from file
         read_char = fgetc(in_file);
+
         if (ferror(in_file) != 0) {
             // Error
             fprintf(stderr, "Error : Cannot read file [%s]\n", argv[1]);
             exit(8);
         }
-        
 
+        // check character
         if (read_char == EOF) {
-            // EOF or Error
+            // End Of File
             break;
         }
 
-        // check character
         if (read_char == '\n') {
             // count line
             lcount++;
