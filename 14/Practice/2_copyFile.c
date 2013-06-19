@@ -6,7 +6,7 @@
  ********************************************************/
 #include <stdio.h>
 
-const unsigned int TAB_SETTING = 8;             /* タブ設定 */
+const unsigned int TAB_SETTING = 4;             /* タブ設定 */
 
 int main(int argc, char *argv[])
 {
@@ -58,15 +58,16 @@ int main(int argc, char *argv[])
             break;
         }
 
-        // convert '\t' to space
+        // copy character 
         if (read_char == '\t') {
+            // convert tab to space, and write
             for (i = 0; i < TAB_SETTING; i++) {
                 fputc(' ', dst_file);
             }
         } else {
+            // write character
             fputc(read_char, dst_file);
         }
-        printf("%c", read_char);
     }
 
     fclose(src_file);
