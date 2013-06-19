@@ -10,7 +10,7 @@ int main()
     int cur_char;               /* 書き出す文字 */
     FILE *out_file;             /* 出力ファイル */
 
-    out_file = fopen("test.out", "w");
+    out_file = fopen("test.out", "wb");
     if (out_file == NULL) {
         fprintf(stderr, "Error : Cannot open output file\n");
         exit(8);
