@@ -25,14 +25,16 @@ int main(int argc, char *argv[])
     char num_str[100];                          // ASCII number read from input file
     unsigned int num;                           // number converted from ASCII number
     int index;                                  // position index for setting character to num_str
-    
-    // get parameters
+   
+    /////////////////////////////////////
+    // check command parameters 
     if (argc != 2) {
         fprintf(stderr, "Error : Command format error\n");
         fprintf(stderr, "Usage : [exe] [input file]\n");
         exit(8);
     }
 
+    // get command parameters
     in_file_name = argv[1];
 
     ////////////////////////////////////
@@ -43,23 +45,26 @@ int main(int argc, char *argv[])
         exit(8);
     }
 
-    // open output files
+    // open output files (for multiple of 3)
     out_multiple3_file = fopen(OUT_MULTIPLE3_FILE_NAME, "w");
     if (out_multiple3_file == NULL) {
         fprintf(stderr, "Error : Cannot open file [%s]\n", OUT_MULTIPLE3_FILE_NAME);
         exit(8);
     }
-    
+   
+    // open output files (others)
     out_other_file = fopen(OUT_OTHER_FILE_NAME, "w");
     if (out_other_file == NULL) {
         fprintf(stderr, "Error : Cannot open file [%s]\n", OUT_OTHER_FILE_NAME);
         exit(8);
     }
 
+    //////////////////////////////////
     // initialize
     index = 0;
     num = 0;
 
+    //////////////////////////////////////
     while (1) {
         ////////////////////////////////
         // read 1 character
@@ -90,6 +95,7 @@ int main(int argc, char *argv[])
                 // convert char[] to unsigned integer
                 sscanf(num_str, "%d", &num);
 
+                // select file, write number
                 if ((num % 3) == 0) {
                     // num is multiple of 3
                     fprintf(out_multiple3_file, " %d", num);
@@ -99,6 +105,7 @@ int main(int argc, char *argv[])
                 }
             }
 
+            // reset index
             index = 0;
         }
 
