@@ -12,6 +12,11 @@ int main()
     int check_number;                           /* 確認中の番号     */
     int cnt;                                    /* ループカウンタ   */
 
+    int prime;
+
+    int prime_decomp[100];
+    int d_index;
+
     /* 数値を入力 */
     printf("Please Input Number > ");
     fgets(line, sizeof(line), stdin);
@@ -20,38 +25,50 @@ int main()
         exit(9);
     }
 
+    d_index = 0;
     check_number = input_number;
 
-    /* 素数を探す */
-    
-    /* 素数があれば */
-    check_number /= prime_number;
+    while (1) {
 
-    /* 素数がなければ → 終了 */
-    
+        /* 素数のリストを取得する */
+        prime = 0; 
 
+        while (1) {
+            prime = get_prime(prime);
+            if (check_number <= prime) {
+                /* 終了 */ 
+                break;
+            }
 
-    /* 素数リストの小さい順に割り切れるかチェック */
-    /* 割り切れたらその値を格納する。*/
-    /* 割り切れたらチェックする数値を更新 */
-    
-
-    /* まず素数のリストを作成する */
-
-    /* 次に、素数のリストの中から、入力値が割り切れるか？を確認する */
-    // 4
-    while (input_number > 1) {
-        for (cnt = 2; cnt < input_number; cnt++) {
-            if (input_number % cnt == 0
+            if ((check_number % prime) == 0) {
+                /* 要素として記憶 */
+                prime_decomp[d_index] = prime;
+                d_index++;
+                /* 割った値を次のループでチェックする数として更新 */
+                check_number = check_number / prime;
+            }
         }
-        input_number--;
+
+        if (check_number <= prime) {
+            /* もう割り切れないので終了 */
+            prime_decomp[d_index] = check_number;
+            d_index++;
+            break;
+        }
+    }
+
+    printf("-------------------\n");
+    for (cnt = 0; cnt < d_index; cnt++) {
+        printf("%d\n", prime_decomp[cnt]);
     }
     
+    return 0;
 }
 
-/************************************************************
- * 範囲内で一番小さい素数を探す
- * 
- * [in]  int max_number
- * [out] int 最小素数
- *************************************************************/
+int get_prime(int min_prime)
+{
+    int i;
+    int prime = min_prime;
+
+    for (i = min_prime; 
+}
