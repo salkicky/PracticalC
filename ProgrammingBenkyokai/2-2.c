@@ -5,11 +5,14 @@
  *********************************************************/
 #include <stdio.h>
 
+
+#define MAX_PRIME_LIST 100
+
 /*
  * プロトタイプ宣言
  */
+int init_prime(void);
 int get_next_prime(int current_prime);
-
 
 /*
  * main
@@ -17,46 +20,49 @@ int get_next_prime(int current_prime);
 int main()
 {
     char line[80];                              /* 入力バッファ     */
-    int input_num;                           /* 入力値           */
     int check_num;                           /* 確認中の番号     */
     int cnt;                                    /* ループカウンタ   */
 
     int prime;
 
-    int prime_decomp[100];
+    int prime_decomp[MAX_PRIME_LIST];
     int d_index;
 
     // 素因数分解する数値を取得
     printf("Please Input Number > ");
     fgets(line, sizeof(line), stdin);
-    if (sscanf(line, "%d", &input_num) == 0) {
+    if (sscanf(line, "%d", &check_num) == 0) {
         printf("Error : not a number [%s]\n", line);
         exit(9);
     }
 
     d_index = 0;
-    check_num = input_num;
 
     while (1) {
         // 初期化
-        prime = 2; 
+        prime = init_prime();
 
         /*
          * check_num が素数であるか？をチェック
          */
         while (1) {
-            prime = get_next_prime(prime);
             if (check_num <= prime) {
-                /* 終了 */ 
+                /* 素数なら終了 */ 
                 break;
             }
 
             if ((check_num % prime) == 0) {
+                /* 割り切れる素数が存在していたなら */
                 /* 要素として記憶 */
                 prime_decomp[d_index] = prime;
                 d_index++;
                 /* 割った値を次のループでチェックする数として更新 */
                 check_num = check_num / prime;
+                prime = init_prime();
+                break;
+            } else {
+                /* 割り切れなければ、次に大きい素数を探す */
+                prime = get_next_prime(prime);
             }
         }
 
@@ -79,6 +85,21 @@ int main()
     return 0;
 }
 
+
+/***********************************************
+ * init_prime  最も小さい素数を返す
+ ***********************************************/
+int init_prime(void)
+{
+    return 2;
+}
+
+
+/***********************************************
+ * get_next_prime  次の素数を探す
+ *
+ * 引数で与えられた数値よりも大きい素数を返す 
+ ***********************************************/
 int get_next_prime(int current_prime)
 {
     int i;
