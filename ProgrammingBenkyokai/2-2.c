@@ -36,44 +36,32 @@ int main()
         exit(9);
     }
 
+    // 初期化
+    prime = init_prime();
     d_index = 0;
 
     while (1) {
-        // 初期化
-        prime = init_prime();
-
         /*
          * check_num が素数であるか？をチェック
          */
-        while (1) {
-            if (check_num <= prime) {
-                /* 素数なら終了 */ 
-                break;
-            }
-
-            if ((check_num % prime) == 0) {
-                /* 割り切れる素数が存在していたなら */
-                /* 要素として記憶 */
-                prime_decomp[d_index] = prime;
-                d_index++;
-                /* 割った値を次のループでチェックする数として更新 */
-                check_num = check_num / prime;
-                prime = init_prime();
-                break;
-            } else {
-                /* 割り切れなければ、次に大きい素数を探す */
-                prime = get_next_prime(prime);
-            }
-        }
-
-        /*
-         * 終了判定 
-         */
         if (check_num <= prime) {
-            // check_num が素数なら終了
+            // check_num が素数で割り切れなければ終了
             prime_decomp[d_index] = check_num;
             d_index++;
             break;
+        }
+
+        if ((check_num % prime) == 0) {
+            /* 割り切れる素数が存在していたなら */
+            /* 要素として記憶 */
+            prime_decomp[d_index] = prime;
+            d_index++;
+            /* 割った値を次のループでチェックする数として更新 */
+            check_num = check_num / prime;
+            prime = init_prime();
+        } else {
+            /* 割り切れなければ、次に大きい素数を探す */
+            prime = get_next_prime(prime);
         }
     }
 
