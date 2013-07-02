@@ -44,8 +44,29 @@ int main(int argc, char *argv[])
         exit(8);
     }
 
+    while(1) {
+        read_char = fgetc(in_file);
 
+        // check error
+        if (ferror(in_file) != 0) {
+            fprintf(stderr, "Error : Cannot read file [%s]\n", in_file_name);
+            exit(8);
+        }
 
+        // check EOF
+        if (read_char == EOF) {
+            break;
+        }
+
+        printf("%c", read_char);
+
+        if (('0' <= read_char) && (read_char <= '9')) {
+            // character is number 
+            fputc((read_char-'0'), out_file);
+        } else {
+            // ignore other character
+        }
+    }
 
     // close file
     fclose(in_file);
