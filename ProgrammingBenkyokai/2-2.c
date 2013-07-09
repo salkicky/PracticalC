@@ -6,20 +6,21 @@
 #include <stdio.h>
 
 
-#define MAX_PRIME_LIST 100
+#define MAX_PRIME_LIST  100
+const int MIN_PRIME = 2;
 
 /*
  * プロトタイプ宣言
  */
-int init_prime(void);
-int get_next_prime(int current_prime);
+static int init_prime(void);
+static int get_next_prime(int current_prime);
 
 /******************************************************
  * main
  ******************************************************/
 int main()
 {
-    char line[80];                              /* 入力バッファ     */
+    char buf[80];                              /* 入力バッファ     */
     int input_num;
     int check_num;                              /* 確認中の番号     */
     int cnt;                                    /* ループカウンタ   */
@@ -31,22 +32,22 @@ int main()
 
     // 素因数分解する数値を取得
     printf("Please Input Number > ");
-    fgets(line, sizeof(line), stdin);
-    if (sscanf(line, "%d", &input_num) == 0) {
-        printf("Error : not a number [%s]\n", line);
+    fgets(buf, sizeof(buf), stdin);
+    if (sscanf(buf, "%d", &input_num) == 0) {
+        printf("Error : not a number [%s]\n", buf);
         exit(9);
     }
 
     // 初期化
     check_num = input_num;
-    prime = init_prime();
+    prime = MIN_PRIME;
     d_index = 0;
-
 
     /*
      * check_num が素数であるか？をチェック
      */
     while (1) {
+        printf("check_num = %d \t prime = %d\n", check_num, prime);
         if (check_num <= prime) {
             // check_num が素数で割り切れなければ終了
             prime_decomp[d_index] = check_num;
@@ -63,7 +64,7 @@ int main()
             // 割った値を次のループでチェックする数として更新
             check_num = check_num / prime;
             // 素数の初期化
-            prime = init_prime();
+            prime = MIN_PRIME;
         } else {
             // 割り切れなければ、次に大きい素数を探す
             prime = get_next_prime(prime);
@@ -79,22 +80,14 @@ int main()
         printf("Error : result is not equal input number.\n");
         return 1;
     }
-
+    
+    // 結果を出力
     printf("-------------------\n");
     for (cnt = 0; cnt < d_index; cnt++) {
         printf("%d\n", prime_decomp[cnt]);
     }
     
     return 0;
-}
-
-
-/***********************************************
- * init_prime  最も小さい素数を返す
- ***********************************************/
-int init_prime(void)
-{
-    return 2;
 }
 
 
