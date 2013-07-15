@@ -5,53 +5,117 @@
  *********************************************************/
 #include <stdio.h>
 
+
+#define MAX_PRIME_LIST  100
+const int MIN_PRIME = 2;
+
+/*
+ * プロトタイプ宣言
+ */
+static int init_prime(void);
+static int get_next_prime(int current_prime);
+
+/******************************************************
+ * main
+ ******************************************************/
 int main()
 {
-    char line[80];                              /* 入力バッファ     */
-    int input_number;                           /* 入力値           */
-    int check_number;                           /* 確認中の番号     */
+    char buf[80];                              /* 入力バッファ     */
+    int input_num;
+    int check_num;                              /* 確認中の番号     */
     int cnt;                                    /* ループカウンタ   */
 
-    /* 数値を入力 */
+    int prime;
+
+    int prime_decomp[MAX_PRIME_LIST];
+    int d_index;
+
+    // 素因数分解する数値を取得
     printf("Please Input Number > ");
-    fgets(line, sizeof(line), stdin);
-    if (sscanf(line, "%d", &input_number) == 0) {
-        printf("Error : not a number [%s]\n", line);
+    fgets(buf, sizeof(buf), stdin);
+    if (sscanf(buf, "%d", &input_num) == 0) {
+        printf("Error : not a number [%s]\n", buf);
         exit(9);
     }
 
-    check_number = input_number;
+    // 初期化
+    check_num = input_num;
+    prime = MIN_PRIME;
+    d_index = 0;
 
-    /* 素数を探す */
-    
-    /* 素数があれば */
-    check_number /= prime_number;
-
-    /* 素数がなければ → 終了 */
-    
-
-
-    /* 素数リストの小さい順に割り切れるかチェック */
-    /* 割り切れたらその値を格納する。*/
-    /* 割り切れたらチェックする数値を更新 */
-    
-
-    /* まず素数のリストを作成する */
-
-    /* 次に、素数のリストの中から、入力値が割り切れるか？を確認する */
-    // 4
-    while (input_number > 1) {
-        for (cnt = 2; cnt < input_number; cnt++) {
-            if (input_number % cnt == 0
+    /*
+     * check_num が素数であるか？をチェック
+     */
+    while (1) {
+        printf("check_num = %d \t prime = %d\n", check_num, prime);
+        if (check_num <= prime) {
+            // check_num が素数で割り切れなければ終了
+            prime_decomp[d_index] = check_num;
+            d_index++;
+            break;
         }
-        input_number--;
+
+        if ((check_num % prime) == 0) {
+            // 割り切れる素数が存在していたなら
+            // 素因数として記憶
+            prime_decomp[d_index] = prime;
+            d_index++;
+
+            // 割った値を次のループでチェックする数として更新
+            check_num = check_num / prime;
+            // 素数の初期化
+            prime = MIN_PRIME;
+        } else {
+            // 割り切れなければ、次に大きい素数を探す
+            prime = get_next_prime(prime);
+        }
+    }
+
+    // 計算結果の確認
+    check_num = 1;
+    for (cnt = 0; cnt < d_index; cnt++) {
+        check_num *= prime_decomp[cnt];
+    }
+    if (check_num != input_num) {
+        printf("Error : result is not equal input number.\n");
+        return 1;
     }
     
+    // 結果を出力
+    printf("-------------------\n");
+    for (cnt = 0; cnt < d_index; cnt++) {
+        printf("%d\n", prime_decomp[cnt]);
+    }
+    
+    return 0;
 }
 
-/************************************************************
- * 範囲内で一番小さい素数を探す
- * 
- * [in]  int max_number
- * [out] int 最小素数
- *************************************************************/
+
+/***********************************************
+ * get_next_prime  次の素数を探す
+ *
+ * 引数で与えられた数値よりも大きい素数を返す 
+ ***********************************************/
+int get_next_prime(int current_prime)
+{
+    int i;
+    int check_num;
+    int next_prime = current_prime;
+
+    for (check_num = (current_prime + 1); ; check_num++) {
+        for (i = 2; i < check_num; i++) {
+            if ((check_num % i) == 0) {
+                // 割り切れるなら素数ではないので抜ける
+                break;
+            }
+        }
+
+        if (i = check_num) {
+            // 素数なら
+            next_prime = check_num;
+            break;
+        }
+    }
+
+    return next_prime;
+}
