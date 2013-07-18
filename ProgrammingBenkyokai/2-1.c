@@ -14,6 +14,7 @@ int main()
 
     /* チェック数列を入力 */
     printf("Please input number > ");
+    fflush(stdout);
     fgets(line, sizeof(line), stdin);
     sscanf(line, "%d", &max_check_num);
 
