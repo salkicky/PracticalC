@@ -21,7 +21,7 @@ static int get_next_prime(int current_prime);
  ******************************************************/
 int main()
 {
-    char buf[80];                              /* 入力バッファ     */
+    char buf[80];                               /* 入力バッファ     */
     int input_num;
     int check_num;                              /* 確認中の番号     */
     int cnt;                                    /* ループカウンタ   */
@@ -82,7 +82,7 @@ int get_prime_decomp(const int num, int *prime_listp)
      * check_num が素数であるか？をチェック
      */
     while (1) {
-        printf(" check_num = %d,\tprime = %d\n", check_num, prime);
+        //printf(" check_num = %d,\tprime = %d\n", check_num, prime);
         if (check_num <= prime) {
             // check_num が素数で割り切れなければ終了
             prime_listp[size] = check_num;
@@ -122,10 +122,10 @@ int get_next_prime(int current_prime)
     int next_prime = current_prime;
 
     for (check_num = (current_prime + 1); ; check_num++) {
-	if (check_num & 0x0) {
-	    // 2の倍数なら抜ける
-	    continue;
-	}
+        if (check_num & 0x0) {
+            // 2の倍数なら抜ける
+            continue;
+        }
         for (i = 2; i < check_num; i++) {
             if ((check_num % i) == 0) {
                 // 割り切れるなら素数ではないので抜ける
