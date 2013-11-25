@@ -5,6 +5,7 @@
  * get_word
  *
  * ストリームから単語を1文字取り出す。
+ * '_'で連結された英数字は合わせて1単語とする。
  * EOFまたは英数字以外の文字を検出した場合は、単語区切り
  * と判断して終了する。
  *
@@ -27,8 +28,8 @@ int get_word(char *bufp, int size, FILE *fp)
             break;
         }
 
-        if (isalnum(ch)) {
-            // 英数字なら
+        if (isalnum(ch) || (ch == '_')) {
+            // 英数字または'_'なら
             bufp[len] = ch;
             len++;
         }
