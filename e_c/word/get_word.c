@@ -40,11 +40,11 @@ int get_word(char *wordp, int size, FILE *fp)
             }
         }
     }
+    wordp[len] = '\0';
 
     if (ch == EOF) {
         return -1;
     }
 
-    wordp[len] = '\0';
     return len;
 }
