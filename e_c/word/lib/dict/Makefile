@@ -6,17 +6,18 @@ OBJDIR		= $(PROJECTDIR)/obj
 SOURCES		= $(wildcard *.c)
 OBJECTS		= $(addprefix $(OBJDIR)/, $(SOURCES:.c=.o))
 
-INCLUDEDIR	= -I$(PROJECTDIR)/include/util
+INC_DIR	= -I$(PROJECTDIR)/include/dict
 
 #-----------------------------
 
-all: get_word
+all: $(OBJECTS)
 
 clean:
-	rm -rf $(OBJECTS)
+	rm -rf $(OBJECTS) *.exe
 
-get_word: $(OBJECTS)
-	echo
+test:
+	$(CC) $(INC_DIR) -o test.exe $(wildcard *.c)
+
 
 # $@ 生成ファイル
 # $< 入力ファイル

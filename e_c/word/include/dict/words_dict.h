@@ -9,25 +9,26 @@
  *
  * @param [in]      *word   ’PŒê•¶Žš—ñ
  *********************************************************/
-void word_dict_add(char *word);
-
+void word_dict_add(void *context, char *word, int word_len);
 
 /*********************************************************
- * word_dict_get_context
+ * word_dict_create_context
  *
  *
  * @return 
  *********************************************************/
-void *word_dict_get_context(void);
+void *word_dict_create_context(void);
+
+/*********************************************************
+ * word_dict_destroy_context
+ *
+ *
+ * @return 
+ *********************************************************/
+void word_dict_destroy_context(void *context);
 
 
-
-void word_dict_get_a_wordinfo(void *contextp, char *wordp, int *counter);
-
-
-
-
-
+void word_dict_get_a_word(void *context, char **wordp, int *counter);
 
 
 #endif //_WORDS_DICT_H_
