@@ -18,5 +18,7 @@ clean:
 get_word: $(OBJECTS)
 	echo
 
+# $@ 生成ファイル
+# $< 入力ファイル
 $(OBJDIR)/%.o:%.c
 	$(CC) $(INCLUDEDIR) -o $@ -c $<
