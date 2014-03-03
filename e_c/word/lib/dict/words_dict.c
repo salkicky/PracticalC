@@ -24,17 +24,15 @@ void _free_wordinfo(struct word_info_tag *winfo);
 
 /*********************************************************
  * word_dict_create_context
+ * 
+ * 実行用のコンテキストを生成する。
+ * 利用終了後は必ず word_dict_destroy_context()で解放すること。
  *
- *
- * @return 
+ * @return 実行用コンテキストへのポインタ
  *********************************************************/
 void *word_dict_create_context(void)
 {
     struct dict_tag *dict;
-
-    //if (headp != NULL) {
-    //    word_dict_destroy_context();
-    //}
 
     dict = (struct dict_tag *)malloc(sizeof(struct dict_tag));
     dict->head = NULL;
@@ -46,14 +44,16 @@ void *word_dict_create_context(void)
 /*********************************************************
  * word_dict_destroy_context
  *
+ * 確保した実行用コンテキストを解放する。
  *
- * @return 
+ * @param [in]      *context 実行用コンテキスト
  *********************************************************/
 void word_dict_destroy_context(void *context)
 {
     struct dict_tag *dict = (struct dict_tag *)context;
-    struct word_info_tag *next, *curr;
+    struct word_info_tag *next;
     
+    // 単語リストの解放
     dict->curr = dict->head;
 
     while (dict->curr != NULL) {
@@ -65,6 +65,9 @@ void word_dict_destroy_context(void *context)
         _free_wordinfo(dict->curr);
         dict->curr = next;
     }
+
+    // 実行用コンテキストの解放
+    free(context);
 }
 
 /*********************************************************
@@ -73,7 +76,9 @@ void word_dict_destroy_context(void *context)
  * 単語を登録する。
  * 既に登録済みの単語の場合は、カウンタを+1する。
  *
- * @param [in]      *word   単語文字列
+ * @param [in]      *context    実行用コンテキスト
+ * @param [in]      *word       単語文字列
+ * @param [in]      word_len    登録する単語の文字数
  *********************************************************/
 void word_dict_add(void *context, char *word, int word_len)
 {
@@ -81,16 +86,24 @@ void word_dict_add(void *context, char *word, int word_len)
     struct word_info_tag *winfo;
 
     if (word == NULL) {
+        // 文字列が未セットなら何もしない
         return;
     }
+
+    //if (*word = '\0') {
+    //    // 文字列がヌルでも何もしない
+    //}
     
     //// wordを探す
     //if (_serch(dictp, wordp) == FALSE) {
     //}
 
     // 無ければ登録
+    
+    // 渡された単語の記憶領域を生成
     winfo = _create_wordinfo(word, word_len);
 
+    // リストの後ろに連結する
     winfo->pre = dict->curr;
     if (dict->curr != NULL) {
         (dict->curr)->next = winfo;
@@ -100,6 +113,15 @@ void word_dict_add(void *context, char *word, int word_len)
     dict->curr = winfo;
 }
 
+/*********************************************************
+ * word_dict_get_a_word
+ *
+ * 単語を一つ取り出す
+ *
+ * @param [in]      *context    実行用コンテキスト
+ * @param [out]     *word       単語文字列
+ * @param [out]     counter     登録した回数
+ *********************************************************/
 void word_dict_get_a_word(void *context, char **wordp, int *counter)
 {
     struct dict_tag *dict = (struct dict_tag *)context;
@@ -112,6 +134,7 @@ void word_dict_get_a_word(void *context, char **wordp, int *counter)
 
 //=================================================================
 
+// 単語の記憶領域を生成する
 struct word_info_tag *_create_wordinfo(char *word, int word_len)
 {
     struct word_info_tag *wp;
@@ -129,6 +152,7 @@ struct word_info_tag *_create_wordinfo(char *word, int word_len)
     return wp;
 }
 
+// 単語の記憶領域を解放する
 void _free_wordinfo(struct word_info_tag *winfo)
 {
     free((void *)winfo->word);

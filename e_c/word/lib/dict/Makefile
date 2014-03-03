@@ -5,18 +5,20 @@ PROJECTDIR	= ../..
 OBJDIR		= $(PROJECTDIR)/obj
 SOURCES		= $(wildcard *.c)
 OBJECTS		= $(addprefix $(OBJDIR)/, $(SOURCES:.c=.o))
+TARGET		= ./test.exe
 
 INC_DIR	= -I$(PROJECTDIR)/include/dict
 
 #-----------------------------
 
-all: $(OBJECTS)
+all: $(OBJECTS) exe
 
 clean:
-	rm -rf $(OBJECTS) *.exe
+	rm -rf $(OBJECTS) $(TARGET)
 
 test:
-	$(CC) $(INC_DIR) -o test.exe $(wildcard *.c)
+	$(CC) $(INC_DIR) -o $(TARGET) $(wildcard *.c)
+	$(TARGET)
 
 
 # $@ ê∂ê¨ÉtÉ@ÉCÉã
