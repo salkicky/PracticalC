@@ -13,6 +13,7 @@ int main(void)
     word_dict_add(context, "apple", strlen("apple"));
     word_dict_add(context, "orange", strlen("orange"));
     word_dict_add(context, "test", strlen("test"));
+    word_dict_add(context, "orange", strlen("orange"));
     word_dict_get_a_word(context, &word, &counter);
     
     if (word != NULL) {

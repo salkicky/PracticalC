@@ -1,26 +1,23 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
+
 #include "words_dict.h"
 
-typedef int _BOOL;
-#define TRUE  1
-#define FALSE 0
+typedef struct _WORD_INFO_T {
+	char *word;                             // 単語記憶領域へのポインタ
+	int count;                              // 単語の登録回数
+    struct _WORD_INFO_T *bp;                // 前のリストへのポインタ
+	struct _WORD_INFO_T *np;                // 次のリストへのポインタ
+} WORD_INFO_T;
 
-struct word_info_tag {
-	char *word;
-	int count;
-	struct word_info_tag *next;
-    struct word_info_tag *pre;
-};
+typedef struct {
+    WORD_INFO_T *head;                      // リスト先頭へのポインタ
+    WORD_INFO_T *curr;                      // リスト作業領域
+} DICT_T;
 
-struct dict_tag {
-    struct word_info_tag *head;
-    struct word_info_tag *curr;
-};
-
-struct word_info_tag *_create_wordinfo(char *word, int word_len);
-void _free_wordinfo(struct word_info_tag *winfo);
+WORD_INFO_T *_alloc_wordinfo(char *word, int word_len);        // 単語管理領域を確保する
+void _free_wordinfo(WORD_INFO_T *winfo);                        // 単語管理領域を解放する
 
 /*********************************************************
  * word_dict_create_context
@@ -32,9 +29,9 @@ void _free_wordinfo(struct word_info_tag *winfo);
  *********************************************************/
 void *word_dict_create_context(void)
 {
-    struct dict_tag *dict;
+    DICT_T *dict;
 
-    dict = (struct dict_tag *)malloc(sizeof(struct dict_tag));
+    dict = (DICT_T *)malloc(sizeof(DICT_T));
     dict->head = NULL;
     dict->curr = NULL;
 
@@ -50,8 +47,8 @@ void *word_dict_create_context(void)
  *********************************************************/
 void word_dict_destroy_context(void *context)
 {
-    struct dict_tag *dict = (struct dict_tag *)context;
-    struct word_info_tag *next;
+    DICT_T *dict = (DICT_T *)context;
+    WORD_INFO_T *next;
     
     // 単語リストの解放
     dict->curr = dict->head;
@@ -61,7 +58,7 @@ void word_dict_destroy_context(void *context)
         printf("  curr->word = %s\n", dict->curr->word);
         printf("  curr->count = %d\n", dict->curr->count);
 
-        next = dict->curr->next;
+        next = dict->curr->np;
         _free_wordinfo(dict->curr);
         dict->curr = next;
     }
@@ -82,8 +79,8 @@ void word_dict_destroy_context(void *context)
  *********************************************************/
 void word_dict_add(void *context, char *word, int word_len)
 {
-    struct dict_tag *dict = (struct dict_tag *)context;
-    struct word_info_tag *winfo;
+    DICT_T *dict = (DICT_T *)context;
+    WORD_INFO_T *winfo;
 
     if (word == NULL) {
         // 文字列が未セットなら何もしない
@@ -100,13 +97,13 @@ void word_dict_add(void *context, char *word, int word_len)
 
     // 無ければ登録
     
-    // 渡された単語の記憶領域を生成
-    winfo = _create_wordinfo(word, word_len);
+    // 渡された単語の管理領域を確保
+    winfo = _alloc_wordinfo(word, word_len);
 
     // リストの後ろに連結する
-    winfo->pre = dict->curr;
+    winfo->bp = dict->curr;
     if (dict->curr != NULL) {
-        (dict->curr)->next = winfo;
+        (dict->curr)->np = winfo;
     } else {
         dict->head = winfo;
     }
@@ -124,7 +121,7 @@ void word_dict_add(void *context, char *word, int word_len)
  *********************************************************/
 void word_dict_get_a_word(void *context, char **wordp, int *counter)
 {
-    struct dict_tag *dict = (struct dict_tag *)context;
+    DICT_T *dict = (DICT_T *)context;
 
     if (dict->curr != NULL) {
         *wordp = dict->curr->word;
@@ -134,26 +131,37 @@ void word_dict_get_a_word(void *context, char **wordp, int *counter)
 
 //=================================================================
 
-// 単語の記憶領域を生成する
-struct word_info_tag *_create_wordinfo(char *word, int word_len)
+// 指定した単語をサーチする
+WORD_INFO_T *_search_from_dict(char *word)
 {
-    struct word_info_tag *wp;
 
-    wp = (struct word_info_tag *)malloc(sizeof(struct word_info_tag));
+}
+
+// 単語の管理領域を確保する
+WORD_INFO_T *_alloc_wordinfo(char *word, int word_len)
+{
+    WORD_INFO_T *wp;
+
+    // 単語の管理領域を確保
+    wp = (WORD_INFO_T *)malloc(sizeof(WORD_INFO_T));
+
+    // 管理する単語の大きさに合わせて領域確保
     wp->word = (char *)malloc(word_len+1);
-    
+
+    // 単語の文字数分を新たに割り当てた領域へコピーし、終端を入れる
     memcpy(wp->word, word, word_len);
     wp->word[word_len] = '\0';
 
-    wp->count = 0;
-    wp->next = NULL;
-    wp->pre = NULL;
+    // その他の領域を初期化
+    wp->count = 1;
+    wp->np = NULL;
+    wp->bp = NULL;
 
     return wp;
 }
 
-// 単語の記憶領域を解放する
-void _free_wordinfo(struct word_info_tag *winfo)
+// 単語の管理領域を解放する
+void _free_wordinfo(WORD_INFO_T *winfo)
 {
     free((void *)winfo->word);
     free((void *)winfo);
