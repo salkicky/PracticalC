@@ -16,7 +16,8 @@ typedef struct {
     WORD_INFO_T *curr;                      // リスト作業領域
 } DICT_T;
 
-WORD_INFO_T *_alloc_wordinfo(char *word, int word_len);        // 単語管理領域を確保する
+WORD_INFO_T *_search_from_dict(WORD_INFO_T *start, char *word); // 単語の記憶位置をサーチする
+WORD_INFO_T *_alloc_wordinfo(char *word, int word_len);         // 単語管理領域を確保する
 void _free_wordinfo(WORD_INFO_T *winfo);                        // 単語管理領域を解放する
 
 /*********************************************************
@@ -87,27 +88,25 @@ void word_dict_add(void *context, char *word, int word_len)
         return;
     }
 
-    //if (*word = '\0') {
-    //    // 文字列がヌルでも何もしない
-    //}
-    
-    //// wordを探す
-    //if (_serch(dictp, wordp) == FALSE) {
-    //}
-
-    // 無ければ登録
-    
-    // 渡された単語の管理領域を確保
-    winfo = _alloc_wordinfo(word, word_len);
-
-    // リストの後ろに連結する
-    winfo->bp = dict->curr;
+    dict->curr = _search_from_dict(dict->head, word);
     if (dict->curr != NULL) {
-        (dict->curr)->np = winfo;
+        // 登録済みならカウント
+        dict->curr->count++;
     } else {
-        dict->head = winfo;
+        // 未登録なら単語を登録
+        
+        // 渡された単語の管理領域を確保
+        winfo = _alloc_wordinfo(word, word_len);
+
+        // リストの後ろに連結する
+        winfo->bp = dict->curr;
+        if (dict->curr != NULL) {
+            (dict->curr)->np = winfo;
+        } else {
+            dict->head = winfo;
+        }
+        dict->curr = winfo;
     }
-    dict->curr = winfo;
 }
 
 /*********************************************************
@@ -132,9 +131,26 @@ void word_dict_get_a_word(void *context, char **wordp, int *counter)
 //=================================================================
 
 // 指定した単語をサーチする
-WORD_INFO_T *_search_from_dict(char *word)
+WORD_INFO_T *_search_from_dict(WORD_INFO_T *start, char *word)
 {
+    WORD_INFO_T *curr;
 
+    curr = start;
+    printf("%s_%s\n", word, curr->word);
+
+    while (curr != NULL) {
+        if (strcmp(word, curr->word) == 0) {
+            // 文字列が一致したら
+            printf("%s_%s\n", word, curr->word);
+            break;
+        }
+        curr = curr->np;
+    }
+    if (curr == NULL) {
+        printf("NUL\n");
+    }
+
+    return curr;
 }
 
 // 単語の管理領域を確保する
