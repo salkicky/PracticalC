@@ -4,6 +4,11 @@
 
 #include "words_dict.h"
 
+#define B_TRUE  1
+#define B_FALSE 0
+
+typedef int _BOOL;
+
 typedef struct _WORD_INFO_T {
 	char *word;                             // 単語記憶領域へのポインタ
 	int count;                              // 単語の登録回数
@@ -16,7 +21,7 @@ typedef struct {
     WORD_INFO_T *curr;                      // リスト作業領域
 } DICT_T;
 
-WORD_INFO_T *_search_from_dict(WORD_INFO_T *start, char *word); // 単語の記憶位置をサーチする
+_BOOL _search_from_dict(DICT_T *dict, char *word, WORD_INFO_T **match);
 WORD_INFO_T *_alloc_wordinfo(char *word, int word_len);         // 単語管理領域を確保する
 void _free_wordinfo(WORD_INFO_T *winfo);                        // 単語管理領域を解放する
 
@@ -81,30 +86,40 @@ void word_dict_destroy_context(void *context)
 void word_dict_add(void *context, char *word, int word_len)
 {
     DICT_T *dict = (DICT_T *)context;
+    WORD_INFO_T *match;
     WORD_INFO_T *winfo;
+    _BOOL    ret; 
 
     if (word == NULL) {
         // 文字列が未セットなら何もしない
         return;
     }
 
-    dict->curr = _search_from_dict(dict->head, word);
-    if (dict->curr != NULL) {
-        // 登録済みならカウント
-        dict->curr->count++;
+    if (dict->head != NULL) {
+        // 初回でなければ
+        ret = _search_from_dict(dict, word, &match);
+        if (ret == B_TRUE) {
+            // 登録済みならカウント
+            match->count++;
+        } else {
+            // 未登録なら単語を登録
+
+            // 渡された単語の管理領域を確保
+            winfo = _alloc_wordinfo(word, word_len);
+
+            // リストの後ろに連結する
+            winfo->bp = dict->curr;
+            (dict->curr)->np = winfo;
+            dict->curr = winfo;
+        }
     } else {
-        // 未登録なら単語を登録
-        
+        // 初回なら
+
         // 渡された単語の管理領域を確保
         winfo = _alloc_wordinfo(word, word_len);
 
         // リストの後ろに連結する
-        winfo->bp = dict->curr;
-        if (dict->curr != NULL) {
-            (dict->curr)->np = winfo;
-        } else {
-            dict->head = winfo;
-        }
+        dict->head = winfo;
         dict->curr = winfo;
     }
 }
@@ -122,6 +137,9 @@ void word_dict_get_a_word(void *context, char **wordp, int *counter)
 {
     DICT_T *dict = (DICT_T *)context;
 
+    *wordp = NULL;
+    *counter = 0;
+
     if (dict->curr != NULL) {
         *wordp = dict->curr->word;
         *counter = dict->curr->count;
@@ -131,26 +149,29 @@ void word_dict_get_a_word(void *context, char **wordp, int *counter)
 //=================================================================
 
 // 指定した単語をサーチする
-WORD_INFO_T *_search_from_dict(WORD_INFO_T *start, char *word)
+_BOOL _search_from_dict(DICT_T *dict, char *word, WORD_INFO_T **match)
 {
     WORD_INFO_T *curr;
 
-    curr = start;
-    printf("%s_%s\n", word, curr->word);
+    dict->curr = dict->head;
 
-    while (curr != NULL) {
-        if (strcmp(word, curr->word) == 0) {
+    while (dict->curr != NULL) {
+        printf("## %s_%s\n", word, dict->curr->word);
+
+        if (strcmp(word, dict->curr->word) == 0) {
             // 文字列が一致したら
-            printf("%s_%s\n", word, curr->word);
+            printf("%s_%s\n", word, dict->curr->word);
+            *match = dict->curr;
             break;
         }
-        curr = curr->np;
-    }
-    if (curr == NULL) {
-        printf("NUL\n");
+
+        if (dict->curr->np == NULL) {
+            return B_FALSE;
+        }
+        dict->curr = dict->curr->np;
     }
 
-    return curr;
+    return B_TRUE;
 }
 
 // 単語の管理領域を確保する
