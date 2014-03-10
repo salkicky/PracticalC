@@ -151,8 +151,6 @@ void word_dict_get_a_word(void *context, char **wordp, int *counter)
 // 指定した単語をサーチする
 _BOOL _search_from_dict(DICT_T *dict, char *word, WORD_INFO_T **match)
 {
-    WORD_INFO_T *curr;
-
     dict->curr = dict->head;
 
     while (dict->curr != NULL) {
