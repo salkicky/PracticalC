@@ -3,6 +3,7 @@
 
 static void RunAllTests(void)
 {
+    RUN_TEST_GROUP(WordDictionary);
 }
 
 int main(int argc, char *argv[])
