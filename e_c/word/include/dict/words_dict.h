@@ -1,6 +1,8 @@
 #ifndef _WORDS_DICT_H_
 #define _WORDS_DICT_H_
 
+struct DictionaryContext_tag;
+
 /*********************************************************
  * word_dict_create_context
  * 
@@ -18,7 +20,7 @@ void *word_dict_create_context(void);
  *
  * @param [in]      *context 実行用コンテキスト
  *********************************************************/
-void word_dict_destroy_context(void *context);
+void word_dict_destroy_context(struct DictionaryContext_tag *context);
 
 /*********************************************************
  * word_dict_add
@@ -30,7 +32,7 @@ void word_dict_destroy_context(void *context);
  * @param [in]      *word       単語文字列
  * @param [in]      word_len    登録する単語の文字数
  *********************************************************/
-void word_dict_add(void *context, char *word, int word_len);
+void word_dict_add(struct DictionaryContext_tag *context, char *word, int word_len);
 
 /*********************************************************
  * word_dict_get_a_word
@@ -41,7 +43,7 @@ void word_dict_add(void *context, char *word, int word_len);
  * @param [out]     *word       単語文字列
  * @param [out]     counter     登録した回数
  *********************************************************/
-void word_dict_get_a_word(void *context, char **wordp, int *counter);
+void word_dict_get_a_word(struct DictionaryContext_tag *context, char **wordp, int *counter);
 
 
 #endif //_WORDS_DICT_H_

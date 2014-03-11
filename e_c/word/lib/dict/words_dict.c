@@ -16,7 +16,7 @@ typedef struct _WORD_INFO_T {
 	struct _WORD_INFO_T *np;                // 次のリストへのポインタ
 } WORD_INFO_T;
 
-typedef struct {
+typedef struct DictionaryContext_tag {
     WORD_INFO_T *head;                      // リスト先頭へのポインタ
     WORD_INFO_T *curr;                      // リスト作業領域
 } DICT_T;
@@ -51,7 +51,7 @@ void *word_dict_create_context(void)
  *
  * @param [in]      *context 実行用コンテキスト
  *********************************************************/
-void word_dict_destroy_context(void *context)
+void word_dict_destroy_context(struct DictionaryContext_tag *context)
 {
     DICT_T *dict = (DICT_T *)context;
     WORD_INFO_T *next;
@@ -83,7 +83,7 @@ void word_dict_destroy_context(void *context)
  * @param [in]      *word       単語文字列
  * @param [in]      word_len    登録する単語の文字数
  *********************************************************/
-void word_dict_add(void *context, char *word, int word_len)
+void word_dict_add(struct DictionaryContext_tag *context, char *word, int word_len)
 {
     DICT_T *dict = (DICT_T *)context;
     WORD_INFO_T *match;
@@ -133,7 +133,7 @@ void word_dict_add(void *context, char *word, int word_len)
  * @param [out]     *word       単語文字列
  * @param [out]     counter     登録した回数
  *********************************************************/
-void word_dict_get_a_word(void *context, char **wordp, int *counter)
+void word_dict_get_a_word(struct DictionaryContext_tag *context, char **wordp, int *counter)
 {
     DICT_T *dict = (DICT_T *)context;
 
