@@ -3,6 +3,6 @@
 
 TEST_GROUP_RUNNER(WordDictionary)
 {
-    RUN_TEST_CASE(WordDictionary, OkTest);
-    RUN_TEST_CASE(WordDictionary, NgTest);
+    RUN_TEST_CASE(WordDictionary, CreateContextTest);
+    RUN_TEST_CASE(WordDictionary, RegisterOneWord);
 }

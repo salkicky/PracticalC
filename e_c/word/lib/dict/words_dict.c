@@ -9,18 +9,23 @@
 
 typedef int _BOOL;
 
-typedef struct _WORD_INFO_T {
+struct _WORD_INFO_T {
 	char *word;                             // 単語記憶領域へのポインタ
 	int count;                              // 単語の登録回数
     struct _WORD_INFO_T *bp;                // 前のリストへのポインタ
 	struct _WORD_INFO_T *np;                // 次のリストへのポインタ
-} WORD_INFO_T;
+};
+typedef struct _WORD_INFO_T WORD_INFO_T;
 
-typedef struct DictionaryContext_tag {
+struct DictionaryContext_tag {
     WORD_INFO_T *head;                      // リスト先頭へのポインタ
     WORD_INFO_T *curr;                      // リスト作業領域
-} DICT_T;
+};
+typedef struct DictionaryContext_tag DICT_T;
 
+// -----------------------------------------
+// プロトタイプ宣言
+// -----------------------------------------
 _BOOL _search_from_dict(DICT_T *dict, char *word, WORD_INFO_T **match);
 WORD_INFO_T *_alloc_wordinfo(char *word, int word_len);         // 単語管理領域を確保する
 void _free_wordinfo(WORD_INFO_T *winfo);                        // 単語管理領域を解放する
@@ -60,10 +65,6 @@ void word_dict_destroy_context(struct DictionaryContext_tag *context)
     dict->curr = dict->head;
 
     while (dict->curr != NULL) {
-        printf("-----\n");
-        printf("  curr->word = %s\n", dict->curr->word);
-        printf("  curr->count = %d\n", dict->curr->count);
-
         next = dict->curr->np;
         _free_wordinfo(dict->curr);
         dict->curr = next;
@@ -74,7 +75,7 @@ void word_dict_destroy_context(struct DictionaryContext_tag *context)
 }
 
 /*********************************************************
- * word_dict_add
+ * word_dict_register
  *
  * 単語を登録する。
  * 既に登録済みの単語の場合は、カウンタを+1する。
@@ -83,7 +84,7 @@ void word_dict_destroy_context(struct DictionaryContext_tag *context)
  * @param [in]      *word       単語文字列
  * @param [in]      word_len    登録する単語の文字数
  *********************************************************/
-void word_dict_add(struct DictionaryContext_tag *context, char *word, int word_len)
+void word_dict_register(struct DictionaryContext_tag *context, char *word, int word_len)
 {
     DICT_T *dict = (DICT_T *)context;
     WORD_INFO_T *match;
@@ -154,11 +155,9 @@ _BOOL _search_from_dict(DICT_T *dict, char *word, WORD_INFO_T **match)
     dict->curr = dict->head;
 
     while (dict->curr != NULL) {
-        printf("## %s_%s\n", word, dict->curr->word);
 
         if (strcmp(word, dict->curr->word) == 0) {
             // 文字列が一致したら
-            printf("%s_%s\n", word, dict->curr->word);
             *match = dict->curr;
             break;
         }

@@ -23,7 +23,7 @@ void *word_dict_create_context(void);
 void word_dict_destroy_context(struct DictionaryContext_tag *context);
 
 /*********************************************************
- * word_dict_add
+ * word_dict_register
  *
  * 単語を登録する。
  * 既に登録済みの単語の場合は、カウンタを+1する。
@@ -32,7 +32,7 @@ void word_dict_destroy_context(struct DictionaryContext_tag *context);
  * @param [in]      *word       単語文字列
  * @param [in]      word_len    登録する単語の文字数
  *********************************************************/
-void word_dict_add(struct DictionaryContext_tag *context, char *word, int word_len);
+void word_dict_register(struct DictionaryContext_tag *context, char *word, int word_len);
 
 /*********************************************************
  * word_dict_get_a_word
