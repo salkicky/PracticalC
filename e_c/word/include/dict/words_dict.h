@@ -1,6 +1,9 @@
 #ifndef _WORDS_DICT_H_
 #define _WORDS_DICT_H_
 
+#define DICT_RET_OK     (1)
+#define DICT_RET_NG     (0)
+
 struct DictionaryContext_tag;
 
 /*********************************************************
@@ -9,9 +12,11 @@ struct DictionaryContext_tag;
  * 実行用のコンテキストを生成する。
  * 利用終了後は必ず word_dict_destroy_context()で解放すること。
  *
- * @return 実行用コンテキストへのポインタ
+ * @param [out] 実行用コンテキストへの pointer to pointer
+ * @return DICT_RET_OK  正常終了
+ * @return DICT_RET_NG  異常終了
  *********************************************************/
-void *word_dict_create_context(void);
+int word_dict_create_context(struct DictionaryContext_tag **contextp);
 
 /*********************************************************
  * word_dict_destroy_context

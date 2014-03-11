@@ -36,17 +36,26 @@ void _free_wordinfo(WORD_INFO_T *winfo);                        // ’PŒêŠÇ——Ìˆæ‚
  * ŽÀs—p‚ÌƒRƒ“ƒeƒLƒXƒg‚ð¶¬‚·‚éB
  * —˜—pI—¹Œã‚Í•K‚¸ word_dict_destroy_context()‚Å‰ð•ú‚·‚é‚±‚ÆB
  *
- * @return ŽÀs—pƒRƒ“ƒeƒLƒXƒg‚Ö‚Ìƒ|ƒCƒ“ƒ^
+ * @param [out] ŽÀs—pƒRƒ“ƒeƒLƒXƒg‚Ö‚Ì pointer to pointer
+ * @return DICT_RET_OK  ³íI—¹
+ * @return DICT_RET_NG  ˆÙíI—¹
  *********************************************************/
-void *word_dict_create_context(void)
+int word_dict_create_context(struct DictionaryContext_tag **contextp)
 {
     DICT_T *dict;
 
     dict = (DICT_T *)malloc(sizeof(DICT_T));
+    if (dict == NULL) {
+        // ƒƒ‚ƒŠŠm•ÛŽ¸”s
+        return DICT_RET_NG;
+    }
+
     dict->head = NULL;
     dict->curr = NULL;
 
-    return (void *)dict;
+    *contextp = dict;
+
+    return DICT_RET_OK;
 }
 
 /*********************************************************

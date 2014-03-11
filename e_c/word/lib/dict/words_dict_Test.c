@@ -33,7 +33,7 @@ TEST_GROUP(WordDictionary);
 TEST_SETUP(WordDictionary)
 {
     // do nothing
-    cp = word_dict_create_context();
+    (void)word_dict_create_context(&cp);
 }
 
 // tear down
