@@ -25,9 +25,9 @@ CFLAGS =
 # --------------------------------------
 all: gw 
 
-#clean: clean_gw clean_count_words
-clean : clean_gw
+clean : cleangw, cleantest
 
+# -------------------------------------
 gw : $(OBJECTS)
 	$(CC) $(CFLAGS) $(INCLUDE_DIRS) -o $@ $(wildcard $(OBJDIR)/*.o)
 
@@ -42,10 +42,17 @@ print:
 	echo $(INCLUDE_DIRS)
 	echo $(OBJECTS)
 
-clean_gw:
+cleangw:
 	rm -rf *.exe $(OBJECTS_a)
 
 #$(OBJDIR)/%.o : %.c
 #	@[ -d $(OBJDIR) ] || mkdir -p $(OBJDIR)
 #	$(COMPILER) $(CFLAGS) $(INCLUDE) -o $@ -c $<
+
+# -------------------------------------
+test:
+	make -f MakefileUnity.mk
+
+cleantest:
+	make -f MakefileUnity.mk clean
 
