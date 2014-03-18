@@ -4,7 +4,7 @@
 
 #include "unity_fixture.h"
 #include "words_dict.h"
-#include "inner_words_dict.h"
+#include "words_dict_inner.h"
 
 // ----------------------------
 
@@ -53,6 +53,54 @@ TEST(WordDictionary, RegisterOneWord)
     TEST_ASSERT_TRUE( cp->curr->count == 1 );
     TEST_ASSERT_TRUE( cp->curr->bp == NULL );
     TEST_ASSERT_TRUE( cp->curr->np == NULL );
+}
+
+TEST(WordDictionary, TestMain)
+{
+    char *words[] = {
+        "orange", "apple", "orange", "peach", "pine", "pine", "peach",
+        "apples", "apple", "apples","apple", "apples","apple", "apples" 
+    };
+    int array_size;
+    int i;
+    int ret;
+    char *registered_word;  // “o˜^‚µ‚½’PŒê
+    int counter;            // ’PŒê“o˜^‰ñ”
+
+    printf("\n------\n");
+
+    // ’PŒê‚Ì“o˜^
+    array_size = sizeof(words) / sizeof(char*);
+    
+    for (i = 0; i < array_size; i++) {
+        printf("register ... %s\n", words[i]);
+        word_dict_register(cp, words[i], strlen(words[i]));
+    }
+    fflush(stdout);
+
+    printf("\n------\n");
+
+    // ’PŒê‚Ìæ‚èo‚µ
+    word_dict_move_head(cp);
+
+    while (1) {
+        ret = word_dict_get_a_word(cp, &registered_word, &counter);
+        if (ret == DICT_RET_NG) {
+            break;
+        }
+
+        printf(" registered word = %s,\t counter = %d\n", registered_word, counter);
+    }
+
+    for (i = 0; i < array_size; i++) {
+        ret = word_dict_get_word_count(cp, words[i], &counter);
+        if (ret == DICT_RET_NG) {
+            break;
+        }
+        printf(" %s is registered %d times\n", words[i], counter);
+    }
+   
+
 }
 
 // ===================================================

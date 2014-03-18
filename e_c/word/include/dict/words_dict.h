@@ -5,6 +5,7 @@
 #define DICT_RET_NG     (0)
 
 struct DictionaryContext_tag;
+typedef struct DictionaryContext_tag DICT_T;
 
 /*********************************************************
  * word_dict_create_context
@@ -40,6 +41,15 @@ void word_dict_destroy_context(struct DictionaryContext_tag *context);
 void word_dict_register(struct DictionaryContext_tag *context, char *word, int word_len);
 
 /*********************************************************
+ * word_dict_move_head
+ *
+ * 辞書を先頭に戻す
+ *
+ * @param [in]      *context    実行用コンテキスト
+ *********************************************************/
+void word_dict_move_head(struct DictionaryContext_tag *context);
+
+/*********************************************************
  * word_dict_get_a_word
  *
  * 単語を一つ取り出す
@@ -47,8 +57,11 @@ void word_dict_register(struct DictionaryContext_tag *context, char *word, int w
  * @param [in]      *context    実行用コンテキスト
  * @param [out]     *word       単語文字列
  * @param [out]     counter     登録した回数
+ * @return DICT_RET_OK      取りだし成功
+ * @return DICT_RET_NG      取りだし失敗
  *********************************************************/
-void word_dict_get_a_word(struct DictionaryContext_tag *context, char **wordp, int *counter);
+int word_dict_get_a_word(struct DictionaryContext_tag *context, char **wordp, int *counter);
 
+int word_dict_get_word_count(struct DictionaryContext_tag *context, char *wordp, int *counter);
 
 #endif //_WORDS_DICT_H_

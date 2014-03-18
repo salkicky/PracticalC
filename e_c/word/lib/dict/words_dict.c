@@ -3,7 +3,7 @@
 #include <string.h>
 
 #include "words_dict.h"
-#include "inner_words_dict.h"
+#include "words_dict_inner.h"
 
 #define B_TRUE  1
 #define B_FALSE 0
@@ -123,6 +123,20 @@ void word_dict_register(struct DictionaryContext_tag *context, char *word, int w
 }
 
 /*********************************************************
+ * word_dict_move_head
+ *
+ * 辞書を先頭に戻す
+ *
+ * @param [in]      *context    実行用コンテキスト
+ *********************************************************/
+void word_dict_move_head(struct DictionaryContext_tag *context)
+{
+    DICT_T *dict = (DICT_T *)context;
+
+    dict->curr = dict->head;
+}
+
+/*********************************************************
  * word_dict_get_a_word
  *
  * 単語を一つ取り出す
@@ -130,8 +144,10 @@ void word_dict_register(struct DictionaryContext_tag *context, char *word, int w
  * @param [in]      *context    実行用コンテキスト
  * @param [out]     *word       単語文字列
  * @param [out]     counter     登録した回数
+ * @return DICT_RET_OK      取りだし成功
+ * @return DICT_RET_NG      取りだし失敗
  *********************************************************/
-void word_dict_get_a_word(struct DictionaryContext_tag *context, char **wordp, int *counter)
+int word_dict_get_a_word(struct DictionaryContext_tag *context, char **wordp, int *counter)
 {
     DICT_T *dict = (DICT_T *)context;
 
@@ -141,7 +157,35 @@ void word_dict_get_a_word(struct DictionaryContext_tag *context, char **wordp, i
     if (dict->curr != NULL) {
         *wordp = dict->curr->word;
         *counter = dict->curr->count;
+
+        dict->curr = dict->curr->np;
+
+        return DICT_RET_OK;
+    } else {
+        *wordp = NULL;
+        *counter = 0;
+
+        return DICT_RET_NG;
     }
+
+}
+
+// 
+int word_dict_get_word_count(struct DictionaryContext_tag *context, char *wordp, int *counter)
+{
+    DICT_T *dict = (DICT_T *)context;
+    WORD_INFO_T *match;
+    _BOOL ret;
+
+    ret = _search_from_dict(dict, wordp, &match);
+    if (ret == B_FALSE) {
+        *counter = 0;
+        return DICT_RET_NG;
+    }
+
+    *counter = match->count;
+
+    return DICT_RET_OK;
 }
 
 //=================================================================

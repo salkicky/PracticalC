@@ -13,6 +13,6 @@ struct DictionaryContext_tag {
     WORD_INFO_T *head;                      // リスト先頭へのポインタ
     WORD_INFO_T *curr;                      // リスト作業領域
 };
-typedef struct DictionaryContext_tag DICT_T;
+//typedef struct DictionaryContext_tag DICT_T;
 
 #endif // _INNER_WORDS_DICT_H_
