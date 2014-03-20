@@ -1,11 +1,10 @@
 #ifndef _WORDS_DICT_H_
 #define _WORDS_DICT_H_
 
-#define DICT_RET_OK     (1)
-#define DICT_RET_NG     (0)
+#include "type.h"
 
-struct DictionaryContext_tag;
-typedef struct DictionaryContext_tag DICT_T;
+struct _DICT_T;
+typedef struct _DICT_T DICT_T;
 
 /*********************************************************
  * word_dict_create_context
@@ -14,10 +13,10 @@ typedef struct DictionaryContext_tag DICT_T;
  * 利用終了後は必ず word_dict_destroy_context()で解放すること。
  *
  * @param [out] 実行用コンテキストへの pointer to pointer
- * @return DICT_RET_OK  正常終了
- * @return DICT_RET_NG  異常終了
+ * @return B_TRUE   正常終了
+ * @return B_FALSE  異常終了
  *********************************************************/
-int word_dict_create_context(struct DictionaryContext_tag **contextp);
+_BOOL word_dict_create_context(DICT_T **contextp);
 
 /*********************************************************
  * word_dict_destroy_context
@@ -26,7 +25,7 @@ int word_dict_create_context(struct DictionaryContext_tag **contextp);
  *
  * @param [in]      *context 実行用コンテキスト
  *********************************************************/
-void word_dict_destroy_context(struct DictionaryContext_tag *context);
+void word_dict_destroy_context(DICT_T *context);
 
 /*********************************************************
  * word_dict_register
@@ -38,7 +37,7 @@ void word_dict_destroy_context(struct DictionaryContext_tag *context);
  * @param [in]      *word       単語文字列
  * @param [in]      word_len    登録する単語の文字数
  *********************************************************/
-void word_dict_register(struct DictionaryContext_tag *context, char *word, int word_len);
+void word_dict_register(DICT_T *context, char *word, int word_len);
 
 /*********************************************************
  * word_dict_move_head
@@ -47,7 +46,7 @@ void word_dict_register(struct DictionaryContext_tag *context, char *word, int w
  *
  * @param [in]      *context    実行用コンテキスト
  *********************************************************/
-void word_dict_move_head(struct DictionaryContext_tag *context);
+void word_dict_move_head(DICT_T *context);
 
 /*********************************************************
  * word_dict_get_a_word
@@ -57,11 +56,11 @@ void word_dict_move_head(struct DictionaryContext_tag *context);
  * @param [in]      *context    実行用コンテキスト
  * @param [out]     *word       単語文字列
  * @param [out]     counter     登録した回数
- * @return DICT_RET_OK      取りだし成功
- * @return DICT_RET_NG      取りだし失敗
+ * @return B_TRUE      取りだし成功
+ * @return B_FALSE     取りだし失敗
  *********************************************************/
-int word_dict_get_a_word(struct DictionaryContext_tag *context, char **wordp, int *counter);
+_BOOL word_dict_get_a_word(DICT_T *context, char **wordp, int *counter);
 
-int word_dict_get_word_count(struct DictionaryContext_tag *context, char *wordp, int *counter);
+_BOOL word_dict_get_word_count(DICT_T *context, char *wordp, int *counter);
 
 #endif //_WORDS_DICT_H_

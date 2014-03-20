@@ -5,12 +5,6 @@
 #include "words_dict.h"
 #include "words_dict_inner.h"
 
-#define B_TRUE  1
-#define B_FALSE 0
-
-typedef int _BOOL;
-
-
 // -----------------------------------------
 // ƒvƒƒgƒ^ƒCƒvéŒ¾
 // -----------------------------------------
@@ -25,17 +19,17 @@ void _free_wordinfo(WORD_INFO_T *winfo);                        // ’PŒêŠÇ——Ìˆæ‚
  * —˜—pI—¹Œã‚Í•K‚¸ word_dict_destroy_context()‚Å‰ð•ú‚·‚é‚±‚ÆB
  *
  * @param [out] ŽÀs—pƒRƒ“ƒeƒLƒXƒg‚Ö‚Ì pointer to pointer
- * @return DICT_RET_OK  ³íI—¹
- * @return DICT_RET_NG  ˆÙíI—¹
+ * @return B_TRUE   ³íI—¹
+ * @return B_FALSE  ˆÙíI—¹
  *********************************************************/
-int word_dict_create_context(struct DictionaryContext_tag **contextp)
+_BOOL word_dict_create_context(DICT_T **contextp)
 {
     DICT_T *dict;
 
     dict = (DICT_T *)malloc(sizeof(DICT_T));
     if (dict == NULL) {
         // ƒƒ‚ƒŠŠm•ÛŽ¸”s
-        return DICT_RET_NG;
+        return B_FALSE;
     }
 
     dict->head = NULL;
@@ -43,7 +37,7 @@ int word_dict_create_context(struct DictionaryContext_tag **contextp)
 
     *contextp = dict;
 
-    return DICT_RET_OK;
+    return B_TRUE;
 }
 
 /*********************************************************
@@ -53,7 +47,7 @@ int word_dict_create_context(struct DictionaryContext_tag **contextp)
  *
  * @param [in]      *context ŽÀs—pƒRƒ“ƒeƒLƒXƒg
  *********************************************************/
-void word_dict_destroy_context(struct DictionaryContext_tag *context)
+void word_dict_destroy_context(DICT_T *context)
 {
     DICT_T *dict = (DICT_T *)context;
     WORD_INFO_T *next;
@@ -81,7 +75,7 @@ void word_dict_destroy_context(struct DictionaryContext_tag *context)
  * @param [in]      *word       ’PŒê•¶Žš—ñ
  * @param [in]      word_len    “o˜^‚·‚é’PŒê‚Ì•¶Žš”
  *********************************************************/
-void word_dict_register(struct DictionaryContext_tag *context, char *word, int word_len)
+void word_dict_register(DICT_T *context, char *word, int word_len)
 {
     DICT_T *dict = (DICT_T *)context;
     WORD_INFO_T *match;
@@ -129,7 +123,7 @@ void word_dict_register(struct DictionaryContext_tag *context, char *word, int w
  *
  * @param [in]      *context    ŽÀs—pƒRƒ“ƒeƒLƒXƒg
  *********************************************************/
-void word_dict_move_head(struct DictionaryContext_tag *context)
+void word_dict_move_head(DICT_T *context)
 {
     DICT_T *dict = (DICT_T *)context;
 
@@ -144,34 +138,33 @@ void word_dict_move_head(struct DictionaryContext_tag *context)
  * @param [in]      *context    ŽÀs—pƒRƒ“ƒeƒLƒXƒg
  * @param [out]     *word       ’PŒê•¶Žš—ñ
  * @param [out]     counter     “o˜^‚µ‚½‰ñ”
- * @return DICT_RET_OK      Žæ‚è‚¾‚µ¬Œ÷
- * @return DICT_RET_NG      Žæ‚è‚¾‚µŽ¸”s
+ * @return B_TRUE      Žæ‚è‚¾‚µ¬Œ÷
+ * @return B_FALSE     Žæ‚è‚¾‚µŽ¸”s
  *********************************************************/
-int word_dict_get_a_word(struct DictionaryContext_tag *context, char **wordp, int *counter)
+_BOOL word_dict_get_a_word(DICT_T *context, char **wordp, int *counter)
 {
     DICT_T *dict = (DICT_T *)context;
 
     *wordp = NULL;
     *counter = 0;
 
-    if (dict->curr != NULL) {
+    if (dict->curr == NULL) {
+        *wordp = NULL;
+        *counter = 0;
+
+        return B_FALSE;
+    } else {
         *wordp = dict->curr->word;
         *counter = dict->curr->count;
 
         dict->curr = dict->curr->np;
 
-        return DICT_RET_OK;
-    } else {
-        *wordp = NULL;
-        *counter = 0;
-
-        return DICT_RET_NG;
+        return B_TRUE;
     }
-
 }
 
 // 
-int word_dict_get_word_count(struct DictionaryContext_tag *context, char *wordp, int *counter)
+_BOOL word_dict_get_word_count(DICT_T *context, char *wordp, int *counter)
 {
     DICT_T *dict = (DICT_T *)context;
     WORD_INFO_T *match;
@@ -180,12 +173,12 @@ int word_dict_get_word_count(struct DictionaryContext_tag *context, char *wordp,
     ret = _search_from_dict(dict, wordp, &match);
     if (ret == B_FALSE) {
         *counter = 0;
-        return DICT_RET_NG;
+        return B_FALSE;
     }
 
     *counter = match->count;
 
-    return DICT_RET_OK;
+    return B_TRUE;
 }
 
 //=================================================================

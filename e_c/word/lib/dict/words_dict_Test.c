@@ -1,5 +1,6 @@
 
 #include <stdlib.h>
+#include <stdio.h>
 #include <string.h>
 
 #include "unity_fixture.h"
@@ -11,7 +12,7 @@
 // =========================
 // local
 // =========================
-static struct DictionaryContext_tag *cp;
+static DICT_T *cp;
 
 // ===================================================
 // ===================================================
@@ -45,7 +46,7 @@ TEST(WordDictionary, RegisterOneWord)
 {
     char* word = "orange";
 
-    word_dict_register(cp, word, strlen(word)); 
+    word_dict_register(cp, word, strlen(word));
 
     TEST_ASSERT_TRUE( cp->curr != NULL );
     TEST_ASSERT_TRUE( cp->head == cp->curr );
@@ -70,7 +71,7 @@ TEST(WordDictionary, TestMain)
     printf("\n------\n");
 
     // ’PŒê‚Ì“o˜^
-    array_size = sizeof(words) / sizeof(char*);
+    array_size = sizeof(words) / sizeof(words[0]);
     
     for (i = 0; i < array_size; i++) {
         printf("register ... %s\n", words[i]);
@@ -85,7 +86,7 @@ TEST(WordDictionary, TestMain)
 
     while (1) {
         ret = word_dict_get_a_word(cp, &registered_word, &counter);
-        if (ret == DICT_RET_NG) {
+        if (ret == B_FALSE) {
             break;
         }
 
@@ -94,7 +95,7 @@ TEST(WordDictionary, TestMain)
 
     for (i = 0; i < array_size; i++) {
         ret = word_dict_get_word_count(cp, words[i], &counter);
-        if (ret == DICT_RET_NG) {
+        if (ret == B_FALSE) {
             break;
         }
         printf(" %s is registered %d times\n", words[i], counter);

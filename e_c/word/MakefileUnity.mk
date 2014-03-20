@@ -11,6 +11,7 @@ UNITY_HOME = unity.framework
 CPP_PLATFORM = Gcc
 PROJECT_HOME_DIR = .
 PROJECT_TEST_DIR = lib
+PROJECT_INC_DIR = include
 CPP_PLATFORM = Gcc
 UNITY_BUILD_HOME = unity.framework/extras/fixture/build
 
@@ -31,6 +32,7 @@ TEST_SRC_DIRS = \
 INCLUDE_DIRS =\
 	.\
 	$(PROJECT_TEST_DIR)\
+	$(PROJECT_INC_DIR)/type\
 	$(PROJECT_TEST_DIR)/dict\
 	$(UNITY_HOME)/src\
 	$(UNITY_HOME)/extras/fixture/src\

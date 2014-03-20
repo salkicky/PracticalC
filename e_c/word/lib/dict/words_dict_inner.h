@@ -9,7 +9,7 @@ struct _WORD_INFO_T {
 };
 typedef struct _WORD_INFO_T WORD_INFO_T;
 
-struct DictionaryContext_tag {
+struct _DICT_T {
     WORD_INFO_T *head;                      // リスト先頭へのポインタ
     WORD_INFO_T *curr;                      // リスト作業領域
 };
